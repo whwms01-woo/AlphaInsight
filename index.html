@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Insight - 개인 투자자 맞춤형 인텔리전스 대시보드</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">α</div>
+                <span class="logo-text">Alpha<span>Insight</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>인텔리전스 대시보드</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="watchlist">
+                    <i data-lucide="star"></i>
+                    <span>나의 관심 종목</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="dart">
+                    <i data-lucide="file-text"></i>
+                    <span>DART 공시 분석</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="ai-news">
+                    <i data-lucide="cpu"></i>
+                    <span>AI 뉴스 요약</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="portfolio">
+                    <i data-lucide="pie-chart"></i>
+                    <span>포트폴리오</span>
+                </a>
+            </nav>
+
+            <div class="watchlist-sidebar">
+                <div class="watchlist-header">
+                    <h3>관심 종목 요약</h3>
+                    <button class="btn-icon-small" id="add-watchlist-btn"><i data-lucide="plus"></i></button>
+                </div>
+                <div class="watchlist-list" id="sidebar-watchlist">
+                    <!-- Dynamic Watchlist Items -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">MD</div>
+                    <div class="user-info">
+                        <span class="user-name">투자파트너 우경석 MD</span>
+                        <span class="user-role">Premium Member</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-input" placeholder="종목명 또는 심볼 검색 (예: 삼성전자, AAPL, 테슬라)..." autocomplete="off">
+                        <div class="search-suggestions" id="search-suggestions">
+                            <!-- Dynamic Search Suggestions -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Market Status Indices -->
+                    <div class="market-indices">
+                        <div class="index-card">
+                            <span class="index-name">코스피</span>
+                            <span class="index-value positive" id="idx-kospi">2,682.44</span>
+                            <span class="index-change positive" id="idx-kospi-change">+0.84%</span>
+                        </div>
+                        <div class="index-card">
+                            <span class="index-name">코스닥</span>
+                            <span class="index-value negative" id="idx-kosdaq">854.12</span>
+                            <span class="index-change negative" id="idx-kosdaq-change">-0.32%</span>
+                        </div>
+                        <div class="index-card">
+                            <span class="index-name">나스닥</span>
+                            <span class="index-value positive" id="idx-nasdaq">16,737.20</span>
+                            <span class="index-change positive" id="idx-nasdaq-change">+1.10%</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-theme-toggle" id="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Scroll Container -->
+            <div class="dashboard-viewport">
+                <!-- Stock Header Overview -->
+                <section class="stock-overview-section">
+                    <div class="stock-title-row">
+                        <div class="stock-identity">
+                            <div class="stock-logo-placeholder" id="company-logo">삼성</div>
+                            <div>
+                                <h1 class="stock-name" id="current-stock-name">삼성전자</h1>
+                                <span class="stock-symbol" id="current-stock-symbol">005930.KS</span>
+                                <span class="market-tag" id="current-stock-market">KOSPI</span>
+                            </div>
+                        </div>
+                        <div class="stock-price-block">
+                            <div class="price-row">
+                                <span class="current-price" id="current-stock-price">78,200</span>
+                                <span class="currency" id="current-stock-currency">KRW</span>
+                            </div>
+                            <div class="change-row">
+                                <span class="price-change positive" id="current-stock-change">+1,200 (+1.56%)</span>
+                                <span class="live-dot-glow"></span>
+                                <span class="live-label">LIVE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Stats Grid -->
+                    <div class="key-stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">시가총액</span>
+                            <span class="stat-value" id="stat-mkt-cap">466.8조원</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">VIX (공포지수)</span>
+                            <span class="stat-value" id="stat-vix">15.00</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">PER (주가수익비율)</span>
+                            <span class="stat-value" id="stat-per">18.42배</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">PBR (주가순자산비율)</span>
+                            <span class="stat-value" id="stat-pbr">1.24배</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">배당수익률</span>
+                            <span class="stat-value" id="stat-div-yield">2.18%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grid Layout: Chart & AI Insights -->
+                <div class="dashboard-grid">
+                    
+                    <!-- Left: Interactive Chart Card -->
+                    <div class="grid-card chart-card">
+                        <div class="card-header">
+                            <div class="header-title-group">
+                                <h2>차트 및 흐름 분석</h2>
+                                <div class="chart-indicators">
+                                    <label class="indicator-checkbox">
+                                        <input type="checkbox" id="toggle-ichimoku" checked>
+                                        <span>일목균형표</span>
+                                    </label>
+                                    <label class="indicator-checkbox">
+                                        <input type="checkbox" id="toggle-rsi">
+                                        <span>RSI 오버레이</span>
+                                    </label>
+                                    <label class="indicator-checkbox">
+                                        <input type="checkbox" id="toggle-elliott">
+                                        <span>엘리어트 파동</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="timeframe-buttons">
+                                <button class="time-btn" data-time="1D">1일</button>
+                                <button class="time-btn" data-time="1W">1주</button>
+                                <button class="time-btn active" data-time="1M">1달</button>
+                                <button class="time-btn" data-time="1Y">1년</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Right: AI Insight Panel -->
+                    <div class="grid-card ai-insight-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="cpu" class="ai-icon"></i> AI 시장 인텔리전스</h2>
+                            <span class="ai-badge">REAL-TIME AI</span>
+                        </div>
+                        <div class="ai-content">
+                            <!-- Hot Sentiment Indicator -->
+                            <div class="sentiment-box">
+                                <div class="sentiment-header">
+                                    <span>시장 심리 분석 (Sentiment)</span>
+                                    <span class="sentiment-label positive" id="sentiment-text">매우 긍정적 (82%)</span>
+                                </div>
+                                <div class="sentiment-bar-bg">
+                                    <div class="sentiment-bar-fill" id="sentiment-bar" style="width: 82%;"></div>
+                                </div>
+                                <div class="sentiment-ticks">
+                                    <span>하락(Bearish)</span>
+                                    <span>중립</span>
+                                    <span>상승(Bullish)</span>
+                                </div>
+                            </div>
+
+                            <!-- MD Quant Signal Card -->
+                            <div class="ai-signal-box">
+                                <div class="signal-header">
+                                    <span>MD 퀀트 시그널 (일목균형표)</span>
+                                    <span class="signal-badge" id="md-signal-badge">HOLD</span>
+                                </div>
+                                <div class="signal-details">
+                                    <div class="signal-metric">
+                                        <span class="lbl">전환선 (9일)</span>
+                                        <span class="val" id="sig-conversion">BULLISH</span>
+                                    </div>
+                                    <div class="signal-metric">
+                                        <span class="lbl">기준선 (26일)</span>
+                                        <span class="val" id="sig-base">BULLISH</span>
+                                    </div>
+                                    <div class="signal-metric">
+                                        <span class="lbl">선행구름 (52일)</span>
+                                        <span class="val" id="sig-cloud">BULLISH</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI General Signal Card -->
+                            <div class="ai-signal-box ai-signal-secondary">
+                                <div class="signal-header">
+                                    <span>AI 종합 시그널 (기술/심리)</span>
+                                    <span class="signal-badge" id="ai-signal-badge">HOLD</span>
+                                </div>
+                                <div class="signal-details">
+                                    <div class="signal-metric">
+                                        <span class="lbl">RSI (14)</span>
+                                        <span class="val" id="sig-rsi">52.4</span>
+                                    </div>
+                                    <div class="signal-metric">
+                                        <span class="lbl">MACD</span>
+                                        <span class="val" id="sig-macd">BULLISH</span>
+                                    </div>
+                                    <div class="signal-metric">
+                                        <span class="lbl">이평선 (SMA)</span>
+                                        <span class="val" id="sig-sma">GOLDEN CROSS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Core Question -->
+                            <div class="ai-summary-box">
+                                <div class="ai-question">
+                                    <span class="glowing-bullet"></span>
+                                    <h3>AI 종합 분석 리포트</h3>
+                                </div>
+                                <p class="ai-answer" id="ai-dynamic-reason">
+                                    데이터를 분석하고 있습니다...
+                                </p>
+                            </div>
+
+                            <!-- AI Keyword Buzz -->
+                            <div class="keyword-section">
+                                <span>주요 키워드</span>
+                                <div class="keyword-tags" id="ai-keywords">
+                                    <span class="tag">HBM3E</span>
+                                    <span class="tag">어닝서프라이즈</span>
+                                    <span class="tag">반도체수급</span>
+                                    <span class="tag">외국인순매수</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Left Bottom: DART Corporate Financial Health & Disclosure -->
+                    <div class="grid-card dart-analysis-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="file-text" class="dart-icon"></i> DART 기업 신뢰도 및 재무 건전성</h2>
+                            <div class="score-badge" id="dart-grade-badge">AAA</div>
+                        </div>
+                        <div class="dart-grid">
+                            <!-- Score Gauges -->
+                            <div class="dart-scores">
+                                <div class="score-row">
+                                    <div class="score-title">
+                                        <span>재무 안정성</span>
+                                        <span class="score-percent" id="score-stability">95%</span>
+                                    </div>
+                                    <div class="score-progress"><div class="score-progress-bar" id="bar-stability" style="width: 95%;"></div></div>
+                                </div>
+                                <div class="score-row">
+                                    <div class="score-title">
+                                        <span>성장성 점수</span>
+                                        <span class="score-percent" id="score-growth">88%</span>
+                                    </div>
+                                    <div class="score-progress"><div class="score-progress-bar" id="bar-growth" style="width: 88%;"></div></div>
+                                </div>
+                                <div class="score-row">
+                                    <div class="score-title">
+                                        <span>수익성 지표</span>
+                                        <span class="score-percent" id="score-profit">92%</span>
+                                    </div>
+                                    <div class="score-progress"><div class="score-progress-bar" id="bar-profit" style="width: 92%;"></div></div>
+                                </div>
+                                <div class="score-row">
+                                    <div class="score-title">
+                                        <span>배당 및 주주 환원</span>
+                                        <span class="score-percent" id="score-dividend">85%</span>
+                                    </div>
+                                    <div class="score-progress"><div class="score-progress-bar" id="bar-dividend" style="width: 85%;"></div></div>
+                                </div>
+                            </div>
+
+                            <!-- Real-time Disclosures -->
+                            <div class="dart-feed-box">
+                                <h3>최근 공시 목록 (DART API 연동)</h3>
+                                <ul class="disclosure-list" id="disclosure-list">
+                                    <!-- Dynamic Disclosures -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Bottom: Custom Economic News & Custom Consensus -->
+                    <div class="grid-card news-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="newspaper"></i> 실시간 시장 흐름 및 컨센서스 뉴스</h2>
+                            <button class="btn-text" id="refresh-news-btn"><i data-lucide="refresh-cw"></i> 갱신</button>
+                        </div>
+                        <div class="news-list" id="news-container">
+                            <!-- Dynamic News Feed with AI Summary Drawer toggles -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script Link -->
+    <script src="app.js"></script>
+</body>
+</html>
