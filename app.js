@@ -1193,12 +1193,100 @@ setInterval(() => {
 }, 4000);
 
 // --- 9. APP INITIALIZATION ---
-document.addEventListener("DOMContentLoaded", () => {
-    // Initial Render call
-    updateDashboard();
+function initApp() {
     renderWatchlist();
+    setupSearch();
     
-    // Add side-effect visual cues
+    // Tab Navigation System
+    const navItems = document.querySelectorAll('.nav-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Remove active from all navs
+            navItems.forEach(nav => nav.classList.remove('active'));
+            // Add active to clicked nav
+            item.classList.add('active');
+            
+            // Hide all tabs
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            
+            // Show target tab
+            const tabId = item.getAttribute('data-tab');
+            const targetPane = document.getElementById(`tab-${tabId}`);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+
+            // Specific Tab Logic
+            if (tabId === 'watchlist') {
+                renderMainWatchlist();
+            }
+        });
+    });
+    
+    updateDashboard();
+}
+
+// Render the main Watchlist Tab Grid
+function renderMainWatchlist() {
+    const container = document.getElementById("main-watchlist-container");
+    if (!container) return;
+    container.innerHTML = "";
+    
+    if (userWatchlist.length === 0) {
+        container.innerHTML = "<p style='color:var(--text-muted)'>관심 종목이 없습니다. 검색창에서 추가해보세요!</p>";
+        return;
+    }
+    
+    userWatchlist.forEach(symbol => {
+        let stock = stockDatabase[symbol];
+        if (!stock) return;
+
+        const isPositive = stock.changePercent >= 0;
+        const trendClass = isPositive ? "positive" : "negative";
+        
+        const card = document.createElement("div");
+        card.className = "grid-card";
+        card.style.cursor = "pointer";
+        card.style.transition = "transform 0.2s, box-shadow 0.2s";
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; font-size:1.1rem;">${stock.name}</h3>
+                <span style="font-size:0.75rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">${stock.symbol}</span>
+            </div>
+            <p class="${trendClass}" style="font-size:1.8rem; font-family:'Orbitron', sans-serif; font-weight:700; margin-top:1rem; margin-bottom:0.25rem;">
+                ${stock.price.toLocaleString()} <span style="font-size:0.8rem">${stock.currency}</span>
+            </p>
+            <p class="${trendClass}" style="font-size:0.9rem; font-weight:600;">
+                ${isPositive ? '▲' : '▼'} ${Math.abs(stock.change).toLocaleString()} (${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%)
+            </p>
+        `;
+        
+        // Hover effects via JS inline (or could add class)
+        card.onmouseenter = () => { card.style.transform = "translateY(-5px)"; card.style.boxShadow = "0 10px 20px rgba(0,0,0,0.2)"; };
+        card.onmouseleave = () => { card.style.transform = "none"; card.style.boxShadow = "none"; };
+        
+        // Click to open Dashboard for this stock
+        card.addEventListener('click', () => {
+            activeStock = symbol;
+            updateDashboard();
+            // Switch back to Dashboard Tab
+            const dashboardNav = document.querySelector('.nav-item[data-tab="dashboard"]');
+            if (dashboardNav) dashboardNav.click();
+            // On mobile, scroll to top
+            window.scrollTo(0,0);
+        });
+        
+        container.appendChild(card);
+    });
+}
+
+// Initialize Lucide Icons & App
+document.addEventListener("DOMContentLoaded", () => {
+    initApp();
     lucide.createIcons();
     
     // Refresh news action

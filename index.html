@@ -111,8 +111,10 @@
 
             <!-- Dashboard Content Scroll Container -->
             <div class="dashboard-viewport">
-                <!-- Stock Header Overview -->
-                <section class="stock-overview-section">
+                <!-- Tab: Dashboard -->
+                <div id="tab-dashboard" class="tab-pane active">
+                    <!-- Stock Header Overview -->
+                    <section class="stock-overview-section">
                     <div class="stock-title-row">
                         <div class="stock-identity">
                             <div class="stock-logo-placeholder" id="company-logo">삼성</div>
@@ -346,7 +348,45 @@
                         </div>
                     </div>
 
+                    </div>
                 </div>
+                <!-- End Tab: Dashboard -->
+
+                <!-- Tab: Watchlist -->
+                <div id="tab-watchlist" class="tab-pane">
+                    <div class="tab-header">
+                        <h2><i data-lucide="star"></i> 나의 관심 종목 (Watchlist)</h2>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:0.5rem;">관심 종목들의 현재가와 등락률을 한 눈에 확인하세요.</p>
+                    </div>
+                    <div class="watchlist-grid-view" id="main-watchlist-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Tab: DART -->
+                <div id="tab-dart" class="tab-pane">
+                    <div class="tab-header">
+                        <h2><i data-lucide="file-text"></i> DART 공시 및 재무 심층 분석</h2>
+                        <p style="color:var(--text-muted); margin-top:1rem;">해당 기능은 다음 업데이트에서 제공될 예정입니다. (준비 중)</p>
+                    </div>
+                </div>
+
+                <!-- Tab: AI News -->
+                <div id="tab-ai-news" class="tab-pane">
+                    <div class="tab-header">
+                        <h2><i data-lucide="cpu"></i> AI 뉴스 요약 및 시장 심리</h2>
+                        <p style="color:var(--text-muted); margin-top:1rem;">글로벌 경제 뉴스를 실시간으로 요약해 드립니다. (준비 중)</p>
+                    </div>
+                </div>
+
+                <!-- Tab: Portfolio -->
+                <div id="tab-portfolio" class="tab-pane">
+                    <div class="tab-header">
+                        <h2><i data-lucide="pie-chart"></i> 포트폴리오 및 자산 배분</h2>
+                        <p style="color:var(--text-muted); margin-top:1rem;">보유 종목의 비중과 수익률을 관리하세요. (준비 중)</p>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>

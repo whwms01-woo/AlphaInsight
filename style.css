@@ -1230,7 +1230,47 @@ body {
     font-weight: 900;
 }
 
-/* Mobile responsive fixes */
+/* ==========================================
+   TAB SYSTEM STYLES
+   ========================================== */
+.tab-pane {
+    display: none;
+    animation: fadeInTab 0.4s ease forwards;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+}
+
+.tab-header h2 i {
+    color: var(--accent-blue);
+}
+
+.watchlist-grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Mobile responsive fixes & Bottom App Bar */
 @media (max-width: 1200px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
@@ -1249,26 +1289,100 @@ body {
 @media (max-width: 768px) {
     .app-container {
         flex-direction: column;
+        padding-bottom: 65px; /* 공간 확보 (하단 네비바) */
     }
+    
     .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
         width: 100%;
-        height: auto;
+        height: 65px;
+        padding: 0;
+        flex-direction: row;
         border-right: none;
-        border-bottom: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
+        z-index: 1000;
+        background-color: rgba(12, 16, 31, 0.95);
+        backdrop-filter: blur(10px);
     }
+    
+    .logo-area, .watchlist-sidebar, .sidebar-footer {
+        display: none; /* 모바일 하단바에서는 메뉴 아이콘만 노출 */
+    }
+    
+    .nav-menu {
+        flex-direction: row;
+        width: 100%;
+        margin: 0;
+        gap: 0;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    .nav-item {
+        flex-direction: column;
+        gap: 4px;
+        padding: 0.5rem;
+        font-size: 0.65rem;
+        border-radius: 0;
+        justify-content: center;
+        flex: 1;
+        text-align: center;
+        color: var(--text-muted);
+    }
+    
+    .nav-item.active {
+        border-left: none;
+        border-top: 2px solid var(--accent-blue);
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
+        padding-left: 0.5rem;
+        padding-top: calc(0.5rem - 2px);
+    }
+    
+    .nav-item i {
+        margin: 0 auto;
+        width: 20px;
+        height: 20px;
+    }
+    
     .header {
-        padding: 0 1rem;
+        padding: 1rem;
         flex-direction: column;
         height: auto;
         gap: 1rem;
         padding-bottom: 1rem;
     }
+    
     .market-indices {
         width: 100%;
         justify-content: space-between;
     }
+    
     .dashboard-viewport {
         padding: 1rem;
+    }
+    
+    /* 모바일에서 핵심 지표 가로 스크롤 최적화 */
+    .key-stats-grid {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        scroll-snap-type: x mandatory;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        min-width: 130px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+    }
+    
+    /* 차트 상단 체크박스 모바일 최적화 */
+    .header-title-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }
 
