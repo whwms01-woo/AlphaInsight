@@ -730,6 +730,11 @@ function renderWatchlist() {
 
 // Update Main Dashboard Widgets
 async function updateDashboard() {
+    // Show Loading State
+    document.getElementById("current-stock-name").innerText = "데이터 로딩 중...";
+    document.getElementById("current-stock-symbol").innerText = activeStock;
+    document.getElementById("current-stock-change").innerText = "서버에서 실시간 데이터를 불러오고 있습니다...";
+    
     let stock = getCurrentStock();
     
     // Attempt real-time backend API fetch
@@ -741,6 +746,8 @@ async function updateDashboard() {
             stockDatabase[activeStock] = liveData;
             stock = liveData;
             console.log(`[Alpha Insight] Real-time yfinance feed connected for ${activeStock}`);
+        } else {
+            console.log(`[Alpha Insight] Backend returned error. Using cached/mock data.`);
         }
     } catch (err) {
         console.log(`[Alpha Insight] Backend server offline. Seamlessly running in offline simulator mode.`);

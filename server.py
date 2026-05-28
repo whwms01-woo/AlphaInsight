@@ -381,7 +381,10 @@ def get_stock_data(ticker: str, timeframe: str = "1M"):
         if current_price is None:
             current_price = info.get("currentPrice") or info.get("regularMarketPrice")
             if current_price is None:
-                current_price = history["Close"].iloc[-1]
+                if len(history) > 0:
+                    current_price = history["Close"].iloc[-1]
+                else:
+                    current_price = 0.0 # ultimate fallback to prevent 500 error
                 
             prev_close = info.get("regularMarketPreviousClose") or info.get("previousClose")
             if prev_close is None and len(history) > 1:
@@ -389,8 +392,12 @@ def get_stock_data(ticker: str, timeframe: str = "1M"):
             elif prev_close is None:
                 prev_close = current_price
                 
-            change = current_price - prev_close
-            change_percent = (change / prev_close) * 100
+            if prev_close and prev_close > 0:
+                change = current_price - prev_close
+                change_percent = (change / prev_close) * 100
+            else:
+                change = 0.0
+                change_percent = 0.0
         
         # 3. Format dynamic currency tags
         currency = "KRW" if is_korean else "USD"

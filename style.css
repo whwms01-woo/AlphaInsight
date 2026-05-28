@@ -1356,13 +1356,25 @@ body {
     
     .market-indices {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 5px;
     }
     
     .dashboard-viewport {
         padding: 1rem;
     }
     
+    .stock-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .current-price {
+        font-size: 2.5rem; /* prevent cutoff */
+    }
+
     /* 모바일에서 핵심 지표 가로 스크롤 최적화 */
     .key-stats-grid {
         display: flex;
@@ -1382,7 +1394,22 @@ body {
     .header-title-group {
         flex-direction: column;
         align-items: flex-start;
+        gap: 0.8rem;
+    }
+    
+    .chart-indicators {
+        flex-wrap: wrap;
         gap: 0.5rem;
+    }
+    
+    .indicator-checkbox span {
+        white-space: nowrap;
+        font-size: 0.75rem;
+    }
+    
+    .timeframe-buttons {
+        width: 100%;
+        justify-content: space-between;
     }
 }
 
